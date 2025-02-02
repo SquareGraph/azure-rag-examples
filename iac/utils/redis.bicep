@@ -2,6 +2,11 @@
 param location string
 
 @description('Env, prod, test or dev')
+@allowed([
+  'prod'
+  'test'
+  'dev'
+])
 param env string
 
 @description('Name of the Redis cache')

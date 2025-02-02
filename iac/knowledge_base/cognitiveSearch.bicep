@@ -1,8 +1,16 @@
+@description('Location for the resources')
 param location string
-param prefix string
 
-resource searchService 'Microsoft.Search/searchServices@2020-08-01' = {
-  name: '${prefix}-search'
+@description('Env, prod, test or dev')
+@allowed([
+  'prod'
+  'test'
+  'dev'
+])
+param env string
+
+resource searchService 'Microsoft.Search/searchServices@2025-02-01-preview' = {
+  name: 'search-${env}'
   location: location
   sku: {
     name: 'basic'
@@ -10,5 +18,6 @@ resource searchService 'Microsoft.Search/searchServices@2020-08-01' = {
   properties: {
     replicaCount: 1
     partitionCount: 1
+    hostingMode: 'default'
   }
 } 

@@ -10,3 +10,6 @@ resource eventGridTopic 'Microsoft.EventGrid/topics@2024-12-15-preview' = {
   properties: {}
 } 
 
+var eventGridTopicId = eventGridTopic.id
+
+output eventGridTopicId string = eventGridTopicId

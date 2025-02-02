@@ -1,8 +1,16 @@
+@description('Location for the resources')
 param location string
-param prefix string
 
-resource storageAccount 'Microsoft.Storage/storageAccounts@2021-02-01' = {
-  name: toLower('${prefix}filestorage')
+@description('Env, prod, test or dev')
+@allowed([
+  'prod'
+  'test'
+  'dev'
+])
+param env string
+
+resource storageAccount 'Microsoft.Storage/storageAccounts@2031-05-01' = {
+  name: 'filestorage-${env}'
   location: location
   sku: {
     name: 'Standard_LRS'
