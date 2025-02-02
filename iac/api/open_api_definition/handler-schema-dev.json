@@ -1,0 +1,102 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+      "title": "Query and File Upload API",
+      "version": "1.0.0",
+      "description": "API schema for query and file upload operations"
+    },
+    "security": [
+    {
+      "bearer": [
+        "api.read"
+      ]
+    },
+    {
+      "apiKey": []
+    }
+  ],
+    "servers": [
+      {
+        "url": "https://{endpoint}-handler-{env}.azure-api.net/api/v1",
+        "variables": {
+          "apimName": {
+            "default": "square-graph"
+          },
+          "env": {
+            "default": "dev"
+          }
+        }
+      }
+    ],
+    "components": {
+      "schemas": {
+        "Query": {
+          "type": "object",
+          "required": ["query"],
+          "properties": {
+            "query": {
+              "type": "string",
+              "description": "The query string"
+            }
+          }
+        },
+        "FileUpload": {
+          "type": "object",
+          "required": ["filename", "b64_content"],
+          "properties": {
+            "filename": {
+              "type": "string",
+              "description": "Name of the file being uploaded"
+            },
+            "b64_content": {
+              "type": "string",
+              "format": "base64",
+              "description": "Base64 encoded content of the file"
+            }
+          }
+        }
+      }
+    },
+    "paths": {
+      "/query": {
+        "post": {
+          "summary": "Submit a query",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Query"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Query processed successfully"
+            }
+          }
+        }
+      },
+      "/upload": {
+        "post": {
+          "summary": "Upload a file",
+          "requestBody": {
+            "required": true,
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileUpload"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "File uploaded successfully"
+            }
+          }
+        }
+      }
+    }
+  }

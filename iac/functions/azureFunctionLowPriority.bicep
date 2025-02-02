@@ -81,4 +81,7 @@ resource functionAppLow 'Microsoft.Web/sites@2021-03-01' = {
       ]
     }
   }
-} 
+}
+
+output functionAppLowId string = functionAppLow.id
+output functionAppLowHostName string = functionAppLow.properties.defaultHostName
