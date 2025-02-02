@@ -1,0 +1,39 @@
+<policies>
+  <inbound>
+    <cache-lookup-value key="@(context.Request.Url)" variable-name="cachedResponse" />
+    <choose>
+      <when condition="@(context.Variables.ContainsKey('cachedResponse') && context.Variables['cachedResponse'] != null)">
+        <return-response>
+          <set-status code="200" reason="OK" />
+          <set-body>@(context.Variables['cachedResponse'])</set-body>
+        </return-response>
+      </when>
+    </choose>
+    <base />
+  </inbound>
+  <backend>
+    <base />
+  </backend>
+  <outbound>
+    <cache-store duration="300" key="@(context.Request.Url)" />
+    <base />
+  </outbound>
+  <on-error>
+    <choose>
+      <when condition="@(context.Response != null && (context.Response.StatusCode == 429 || context.Response.StatusCode.ToString().StartsWith('5')))">
+        <cache-lookup-value key="listBackends" variable-name="listBackends" />
+        <set-variable name="listBackends" value="@{
+          var backends = (JArray)context.Variables['listBackends'];
+          var currentBackendIndex = context.Variables.ContainsKey('backendIndex') ? (int)context.Variables['backendIndex'] : 0;
+          var retryAfter = Convert.ToInt32(context.Response.Headers.GetValueOrDefault('Retry-After', '10'));
+          JObject backend = (JObject)backends[currentBackendIndex];
+          backend['isThrottling'] = true;
+          backend['retryAfter'] = DateTime.Now.AddSeconds(retryAfter);
+          return backends;
+        }" />
+        <retry condition="@(true)" count="1" interval="@(Convert.ToInt32(context.Response.Headers.GetValueOrDefault('Retry-After', '10')))" />
+      </when>
+    </choose>
+    <base />
+  </on-error>
+</policies> 
