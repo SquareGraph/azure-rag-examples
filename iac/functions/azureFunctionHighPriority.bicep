@@ -30,7 +30,7 @@ resource functionAppHigh 'Microsoft.Web/sites@2021-03-01' = {
       appSettings: [
         {
           name: 'AzureWebJobsStorage'
-          value: listKeys(functionStorage.id, '2021-02-01').keys[0].value
+          value: listKeys(functionStorage, '2021-02-01').keys[0].value
         }
       ]
     }

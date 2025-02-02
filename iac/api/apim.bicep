@@ -3,6 +3,9 @@ param prefix string
 param openAIPTUUrl string
 param openAIPAYGUrl string
 
+@description('Connection string for the Redis cache')
+param redisConnectionString string
+
 resource apim 'Microsoft.ApiManagement/service@2022-08-01' = {
   name: '${prefix}-apim'
   location: location
@@ -14,13 +17,14 @@ resource apim 'Microsoft.ApiManagement/service@2022-08-01' = {
     type: 'SystemAssigned'
   }
   properties: {
-    publisherEmail: 'admin@example.com'
+    publisherEmail: 'mrcndabrowski@gmail.com'
     publisherName: prefix
   }
 }
 
 resource apimGlobalPolicy 'Microsoft.ApiManagement/service/policies@2021-08-01' = {
-  name: '${apim.name}/policy'
+  parent: apim
+  name: 'policy'
   properties: {
     policyContent: loadTextContent('apim-policy.xml')
   }
