@@ -1,0 +1,12 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+      "prefix": { "value": "ragapp" },
+      "env": { "value": "dev" },
+      "apimName": { "value": "ragapp-apim" },
+      "apiGatewayName": { "value": "ragapp-api-gateway" },
+      "cosmosAccountName": { "value": "ragappcosmos" },
+      "sbNamespaceName": { "value": "ragappsb" }
+    }
+  }
