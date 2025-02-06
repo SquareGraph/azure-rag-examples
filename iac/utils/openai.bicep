@@ -34,4 +34,8 @@ resource openAIPAYG 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
   tags: {
     priority: '2'
   }
-} 
+}
+
+
+output openAIPTUEndpoint string = openAIPTU.properties.endpoint
+output openAIPAYGEndpoint string = openAIPAYG.properties.endpoint 
