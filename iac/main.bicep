@@ -29,7 +29,7 @@ param sbNamespaceName string = '${prefix}sb'
 param workerRuntime string = 'python'
 
 // Deploy the main APIM instance
-module apimMainModule './iac/api/apim-main.bicep' = {
+module apimMainModule 'api/apim-main.bicep' = {
   name: '${prefix}-apimmain-deploy'
   params: {
     apimName: apimName
@@ -40,7 +40,7 @@ module apimMainModule './iac/api/apim-main.bicep' = {
 }
 
 // Deploy APIM backends (PTU & PAYG)
-module apimBackendModule './iac/api/apim-backend.bicep' = {
+module apimBackendModule 'api/apim-backend.bicep' = {
   name: '${prefix}-apimbackend-deploy'
   params: {
     apimName: apimName
@@ -51,7 +51,7 @@ module apimBackendModule './iac/api/apim-backend.bicep' = {
 }
 
 // Deploy APIM subscription
-module apimSubscriptionModule './iac/api/apim-subscription.bicep' = {
+module apimSubscriptionModule 'api/apim-subscription.bicep' = {
   name: '${prefix}-apimsub-deploy'
   params: {
     apimName: apimName
@@ -60,7 +60,7 @@ module apimSubscriptionModule './iac/api/apim-subscription.bicep' = {
 }
 
 // Deploy APIM utilities (e.g. Redis cache integration)
-module apimUtilsModule './iac/api/apim-utils.bicep' = {
+module apimUtilsModule 'api/apim-utils.bicep' = {
   name: '${prefix}-apimutils-deploy'
   params: {
     apimName: apimName
@@ -71,7 +71,7 @@ module apimUtilsModule './iac/api/apim-utils.bicep' = {
 }
 
 // Deploy API definitions (handler & OpenAI)
-module apiPmmModule './iac/api/apipm-api.bicep' = {
+module apiPmmModule 'api/apipm-api.bicep' = {
   name: '${prefix}-api-pm-deploy'
   params: {
     apimName: apimName
@@ -81,7 +81,7 @@ module apiPmmModule './iac/api/apipm-api.bicep' = {
 }
 
 //UTILITY
-module redisModule './iac/utils/redis.bicep' = {
+module redisModule 'utils/redis.bicep' = {
   name: '${prefix}-redis-deploy'
   params: {
     location: location
@@ -91,7 +91,7 @@ module redisModule './iac/utils/redis.bicep' = {
 }
 
 // Deploy Azure OpenAI services (PTU & PAYG)
-module openaiModule './iac/utils/openai.bicep' = {
+module openaiModule 'utils/openai.bicep' = {
   name: '${prefix}-openai-deploy'
   params: {
     location: location
@@ -100,7 +100,7 @@ module openaiModule './iac/utils/openai.bicep' = {
 }
 
 // EVENTS
-module eventGridModule './iac/events/eventGrid.bicep' = {
+module eventGridModule 'events/eventGrid.bicep' = {
   name: '${prefix}-eventgrid-deploy'
   params: {
     location: location
@@ -108,7 +108,7 @@ module eventGridModule './iac/events/eventGrid.bicep' = {
   }
 }
 
-module serviceBusModule './iac/events/serviceBus.bicep' = {
+module serviceBusModule 'events/serviceBus.bicep' = {
   name: '${prefix}-sb-deploy'
   params: {
     location: location
@@ -118,7 +118,7 @@ module serviceBusModule './iac/events/serviceBus.bicep' = {
 }
 
 // FUNCTIONS
-module funcHighModule './iac/functions/azureFunctionHighPriority.bicep' = {
+module funcHighModule 'functions/azureFunctionHighPriority.bicep' = {
   name: '${prefix}-func-high-deploy'
   params: {
     location: location
@@ -127,7 +127,7 @@ module funcHighModule './iac/functions/azureFunctionHighPriority.bicep' = {
   }
 }
 
-module funcLowModule './iac/functions/azureFunctionLowPriority.bicep' = {
+module funcLowModule 'functions/azureFunctionLowPriority.bicep' = {
   name: '${prefix}-func-low-deploy'
   params: {
     location: location
@@ -138,7 +138,7 @@ module funcLowModule './iac/functions/azureFunctionLowPriority.bicep' = {
 }
 
 // KNOWLEDGE BASE SERVICES
-module blobStorageModule './iac/knowledge_base/blobStorage.bicep' = {
+module blobStorageModule 'knowledge_base/blobStorage.bicep' = {
   name: '${prefix}-blob-deploy'
   params: {
     location: location
@@ -146,7 +146,7 @@ module blobStorageModule './iac/knowledge_base/blobStorage.bicep' = {
   }
 }
 
-module cognitiveSearchModule './iac/knowledge_base/cognitiveSearch.bicep' = {
+module cognitiveSearchModule 'knowledge_base/cognitiveSearch.bicep' = {
   name: '${prefix}-search-deploy'
   params: {
     location: location
@@ -154,7 +154,7 @@ module cognitiveSearchModule './iac/knowledge_base/cognitiveSearch.bicep' = {
   }
 }
 
-module cosmosModule './iac/knowledge_base/cosmosDb.bicep' = {
+module cosmosModule 'knowledge_base/cosmosDb.bicep' = {
   name: '${prefix}-cosmos-deploy'
   params: {
     accountName: cosmosAccountName
