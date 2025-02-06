@@ -16,7 +16,7 @@ param redisConnectionString string
 param redisHostName string
 
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' existing = {
-  name: apimName
+  name: '${apimName}-${env}'
 }
 
 resource apimCache 'Microsoft.ApiManagement/service/caches@2021-08-01' = {

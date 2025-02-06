@@ -25,10 +25,10 @@ var handlerSchemas = {
 }
 
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' existing = {
-  name: apimName
+  name: '${apimName}-${env}'
 }
 
-resource api 'Microsoft.ApiManagement/service/apis@2021-08-01' = {
+resource apiHandler 'Microsoft.ApiManagement/service/apis@2021-08-01' = {
   parent: apim
   name: '${apiGatewayName}-handler-${env}'
   properties: {

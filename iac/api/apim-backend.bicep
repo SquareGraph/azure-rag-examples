@@ -16,7 +16,7 @@ param openAIPTUUrl string
 param openAIPAYGUrl string
 
 resource apim 'Microsoft.ApiManagement/service@2021-08-01' existing = {
-  name: apimName
+  name: '${apimName}-${env}'
 }
 
 // Backend resources for load balancing OpenAI calls

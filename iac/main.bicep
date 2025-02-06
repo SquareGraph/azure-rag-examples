@@ -2,85 +2,172 @@ targetScope = 'resourceGroup'
 
 param location string = resourceGroup().location
 param prefix string = 'ragapp'
+param env string = 'dev'
 
-module apimModule 'apim.bicep' = {
-  name: '${prefix}-apimdeploy'
+// APIM related parameters
+param apimName string = '${prefix}-apim'
+param apiGatewayName string = '${prefix}-api-gateway'
+param openAIPTUUrl string = 'https://openai-ptu.example.com' 
+param openAIPAYGUrl string = 'https://openai-payg.example.com'
+
+// Cosmos DB related parameters
+param cosmosAccountName string = '${prefix}cosmos'
+param primaryRegion string = location
+param secondaryRegion string = location
+param defaultConsistencyLevel string = 'Session'
+param maxStalenessPrefix int = 100000
+param maxIntervalInSeconds int = 300
+param systemManagedFailover bool = true
+param databaseName string = 'mydb'
+param containerName string = 'mycontainer'
+param autoscaleMaxThroughput int = 4000
+
+// Service Bus parameter
+param sbNamespaceName string = '${prefix}sb'
+
+// Worker runtime for Functions (using python as example)
+param workerRuntime string = 'python'
+
+// Deploy the main APIM instance
+module apimMainModule './iac/api/apim-main.bicep' = {
+  name: '${prefix}-apimmain-deploy'
   params: {
+    apimName: apimName
+    env: env
     location: location
-    prefix: prefix
-    openAIPTUUrl: 'https://openai-ptu.example.com'  // placeholder URL—replace accordingly
-    openAIPAYGUrl: 'https://openai-payg.example.com' // placeholder URL—replace accordingly
+    apiGatewayName: apiGatewayName
   }
 }
 
-module redisModule 'redis.bicep' = {
-  name: '${prefix}-redisdeploy'
+// Deploy APIM backends (PTU & PAYG)
+module apimBackendModule './iac/api/apim-backend.bicep' = {
+  name: '${prefix}-apimbackend-deploy'
   params: {
-    location: location
-    prefix: prefix
+    apimName: apimName
+    env: env
+    openAIPTUUrl: openAIPTUUrl
+    openAIPAYGUrl: openAIPAYGUrl
   }
 }
 
-module eventGridModule 'eventGrid.bicep' = {
-  name: '${prefix}-evtgdeploy'
+// Deploy APIM subscription
+module apimSubscriptionModule './iac/api/apim-subscription.bicep' = {
+  name: '${prefix}-apimsub-deploy'
   params: {
-    location: location
-    prefix: prefix
+    apimName: apimName
+    env: env
   }
 }
 
-module serviceBusModule 'serviceBus.bicep' = {
-  name: '${prefix}-sbdeploy'
+// Deploy APIM utilities (e.g. Redis cache integration)
+module apimUtilsModule './iac/api/apim-utils.bicep' = {
+  name: '${prefix}-apimutils-deploy'
   params: {
-    location: location
-    prefix: prefix
+    apimName: apimName
+    env: env
+    redisConnectionString: 'DefaultEndpointsProtocol=https;AccountName=yourAccount;AccountKey=yourKey'
+    redisHostName: '${prefix}-redis'
   }
 }
 
-module funcHighModule 'azureFunctionHighPriority.bicep' = {
-  name: '${prefix}-func-high-deploy'
+// Deploy API definitions (handler & OpenAI)
+module apiPmmModule './iac/api/apipm-api.bicep' = {
+  name: '${prefix}-api-pm-deploy'
   params: {
-    location: location
-    prefix: prefix
+    apimName: apimName
+    env: env
+    apiGatewayName: apiGatewayName
   }
 }
 
-module funcLowModule 'azureFunctionLowPriority.bicep' = {
-  name: '${prefix}-func-low-deploy'
+//UTILITY
+module redisModule './iac/utils/redis.bicep' = {
+  name: '${prefix}-redis-deploy'
   params: {
     location: location
-    prefix: prefix
+    env: env
+    redisName: '${prefix}-redis'
   }
 }
 
-module cognitiveSearchModule 'cognitiveSearch.bicep' = {
-  name: '${prefix}-searchdeploy'
-  params: {
-    location: location
-    prefix: prefix
-  }
-}
-
-module blobStorageModule 'blobStorage.bicep' = {
-  name: '${prefix}-blobdeploy'
-  params: {
-    location: location
-    prefix: prefix
-  }
-}
-
-module cosmosModule 'cosmosDb.bicep' = {
-  name: '${prefix}-cosmosdeploy'
-  params: {
-    location: location
-    prefix: prefix
-  }
-}
-
-module openaiModule 'openai.bicep' = {
+// Deploy Azure OpenAI services (PTU & PAYG)
+module openaiModule './iac/utils/openai.bicep' = {
   name: '${prefix}-openai-deploy'
   params: {
     location: location
     prefix: prefix
   }
-} 
+}
+
+// EVENTS
+module eventGridModule './iac/events/eventGrid.bicep' = {
+  name: '${prefix}-eventgrid-deploy'
+  params: {
+    location: location
+    env: env
+  }
+}
+
+module serviceBusModule './iac/events/serviceBus.bicep' = {
+  name: '${prefix}-sb-deploy'
+  params: {
+    location: location
+    env: env
+    sbNamespaceName: sbNamespaceName
+  }
+}
+
+// FUNCTIONS
+module funcHighModule './iac/functions/azureFunctionHighPriority.bicep' = {
+  name: '${prefix}-func-high-deploy'
+  params: {
+    location: location
+    env: env
+    workerRuntime: workerRuntime
+  }
+}
+
+module funcLowModule './iac/functions/azureFunctionLowPriority.bicep' = {
+  name: '${prefix}-func-low-deploy'
+  params: {
+    location: location
+    env: env
+    workerRuntime: workerRuntime
+    sbNamespaceName: sbNamespaceName
+  }
+}
+
+// KNOWLEDGE BASE SERVICES
+module blobStorageModule './iac/knowledge_base/blobStorage.bicep' = {
+  name: '${prefix}-blob-deploy'
+  params: {
+    location: location
+    env: env
+  }
+}
+
+module cognitiveSearchModule './iac/knowledge_base/cognitiveSearch.bicep' = {
+  name: '${prefix}-search-deploy'
+  params: {
+    location: location
+    env: env
+  }
+}
+
+module cosmosModule './iac/knowledge_base/cosmosDb.bicep' = {
+  name: '${prefix}-cosmos-deploy'
+  params: {
+    accountName: cosmosAccountName
+    env: env
+    location: location
+    primaryRegion: primaryRegion
+    secondaryRegion: secondaryRegion
+    defaultConsistencyLevel: defaultConsistencyLevel
+    maxStalenessPrefix: maxStalenessPrefix
+    maxIntervalInSeconds: maxIntervalInSeconds
+    systemManagedFailover: systemManagedFailover
+    databaseName: databaseName
+    containerName: containerName
+    autoscaleMaxThroughput: autoscaleMaxThroughput
+  }
+}
