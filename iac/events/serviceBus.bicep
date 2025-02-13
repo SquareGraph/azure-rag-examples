@@ -7,7 +7,7 @@ param env string
 @description('Name of the Service Bus namespace')
 param sbNamespaceName string
 
-resource sbNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01-preview' = {
+resource sbNamespace 'Microsoft.ServiceBus/namespaces@2021-11-01' = {
   name: '${sbNamespaceName}-${env}-sb'
   location: location
   sku: {
@@ -17,7 +17,7 @@ resource sbNamespace 'Microsoft.ServiceBus/namespaces@2024-01-01-preview' = {
   properties: {}
 }
 
-resource sbLowPriorityQueue 'Microsoft.ServiceBus/namespaces/queues@2024-01-01-preview' = {
+resource sbLowPriorityQueue 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   name: '${sbNamespace.name}-${env}-lowpriority'
   parent: sbNamespace
   properties: {
@@ -27,7 +27,7 @@ resource sbLowPriorityQueue 'Microsoft.ServiceBus/namespaces/queues@2024-01-01-p
   }
 }
 
-resource sbDeadLetterQueue 'Microsoft.ServiceBus/namespaces/queues@2024-01-01-preview' = {
+resource sbDeadLetterQueue 'Microsoft.ServiceBus/namespaces/queues@2021-11-01' = {
   name: '${sbNamespace.name}-${env}-deadletter'
   parent: sbNamespace
   properties: {

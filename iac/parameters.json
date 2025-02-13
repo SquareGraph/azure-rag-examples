@@ -7,6 +7,6 @@
       "apimName": { "value": "ragapp-apim" },
       "apiGatewayName": { "value": "ragapp-api-gateway" },
       "cosmosAccountName": { "value": "ragappcosmos" },
-      "sbNamespaceName": { "value": "ragappsb" }
+      "sbNamespaceName": { "value": "ragappsb2" }
     }
   }

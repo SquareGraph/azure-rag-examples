@@ -73,7 +73,13 @@ var consistencyPolicy = {
     defaultConsistencyLevel: 'Strong'
   }
 }
-var locations = [
+var locations = (secondaryRegion == primaryRegion) ? [
+  {
+    locationName: primaryRegion
+    failoverPriority: 0
+    isZoneRedundant: false
+  }
+] : [
   {
     locationName: primaryRegion
     failoverPriority: 0
