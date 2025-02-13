@@ -10,7 +10,7 @@ param location string
 param env string
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
-  name: toLower('filestorage${env}')
+  name: toLower('filestoragemain${env}')
   location: location
   sku: {
     name: 'Standard_LRS'
