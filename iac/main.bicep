@@ -7,8 +7,6 @@ param env string = 'dev'
 // APIM related parameters
 param apimName string = '${prefix}-apim'
 param apiGatewayName string = '${prefix}-api-gateway'
-param openAIPTUUrl string = 'https://openai-ptu.example.com' 
-param openAIPAYGUrl string = 'https://openai-payg.example.com'
 
 // Cosmos DB related parameters
 param cosmosAccountName string = '${prefix}cosmos'
@@ -39,20 +37,29 @@ module apimMainModule 'api/apim-main.bicep' = {
   }
 }
 
+var dynamicOpenAIPTUUrl = openaiModule.outputs.openAIPTUEndpoint
+var dynamicOpenAIPAYGUrl = openaiModule.outputs.openAIPAYGEndpoint
+
 // Deploy APIM backends (PTU & PAYG)
 module apimBackendModule 'api/apim-backend.bicep' = {
   name: '${prefix}-apimbackend-deploy'
+  dependsOn: [
+    apimMainModule
+  ]
   params: {
     apimName: apimName
     env: env
-    openAIPTUUrl: openAIPTUUrl
-    openAIPAYGUrl: openAIPAYGUrl
+    openAIPTUUrl: dynamicOpenAIPTUUrl
+    openAIPAYGUrl: dynamicOpenAIPAYGUrl
   }
 }
 
 // Deploy APIM subscription
 module apimSubscriptionModule 'api/apim-subscription.bicep' = {
   name: '${prefix}-apimsub-deploy'
+  dependsOn: [
+    apimMainModule
+  ]
   params: {
     apimName: apimName
     env: env
@@ -62,6 +69,9 @@ module apimSubscriptionModule 'api/apim-subscription.bicep' = {
 // Deploy APIM utilities (e.g. Redis cache integration)
 module apimUtilsModule 'api/apim-utils.bicep' = {
   name: '${prefix}-apimutils-deploy'
+  dependsOn: [
+    apimMainModule
+  ]
   params: {
     apimName: apimName
     env: env
@@ -73,6 +83,9 @@ module apimUtilsModule 'api/apim-utils.bicep' = {
 // Deploy API definitions (handler & OpenAI)
 module apiPmmModule 'api/apipm-api.bicep' = {
   name: '${prefix}-api-pm-deploy'
+  dependsOn: [
+    apimMainModule
+  ]
   params: {
     apimName: apimName
     env: env

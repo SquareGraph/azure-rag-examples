@@ -36,7 +36,7 @@ resource functionPlanLow 'Microsoft.Web/serverfarms@2021-03-01' = {
 }
 
 resource functionStorageLow 'Microsoft.Storage/storageAccounts@2021-02-01' = {
-  name: 'funcstoragelow-${env}'
+  name: toLower('funcstoragelow${env}')
   location: location
   sku: {
     name: 'Standard_LRS'

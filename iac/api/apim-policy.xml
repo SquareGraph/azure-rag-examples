@@ -1,4 +1,4 @@
-<policies>
+<policies><![CDATA[
   <inbound>
     <!-- TODO: Implement auth pre request -->
     <cache-lookup-value key="@(context.Request.Url)" variable-name="cachedResponse" />
@@ -38,4 +38,4 @@
     </choose>
     <base />
   </on-error>
-</policies> 
+]]></policies> 

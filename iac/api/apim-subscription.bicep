@@ -18,9 +18,7 @@ resource apimSubscription 'Microsoft.ApiManagement/service/subscriptions@2024-06
   name: '${apimName}-${env}-subscription'
   properties: {
     displayName: '${apimName}-${env}-subscription'
-    scope: {
-      subscriptionId: subscription().subscriptionId
-    }
+    scope: subscription().subscriptionId
     state: 'active'
     primaryKey: '${apimName}-${env}-primary-key'
     secondaryKey: '${apimName}-${env}-secondary-key'

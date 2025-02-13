@@ -1,7 +1,7 @@
 param location string
 param prefix string
 
-resource openAIPTU 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
+resource openAIPTU 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: '${prefix}-openai-ptu'
   location: location
   kind: 'OpenAI'
@@ -19,7 +19,7 @@ resource openAIPTU 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
   }
 }
 
-resource openAIPAYG 'Microsoft.CognitiveServices/accounts@2021-04-30' = {
+resource openAIPAYG 'Microsoft.CognitiveServices/accounts@2023-05-01' = {
   name: '${prefix}-openai-payg'
   location: location
   kind: 'OpenAI'
