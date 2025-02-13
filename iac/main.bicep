@@ -37,6 +37,14 @@ module apimMainModule 'api/apim-main.bicep' = {
   }
 }
 
+// Deploy Azure OpenAI services (PTU & PAYG)
+module openaiModule 'utils/openai.bicep' = {
+  name: '${prefix}-openai-deploy'
+  params: {
+    location: location
+    prefix: prefix
+  }
+}
 var dynamicOpenAIPTUUrl = openaiModule.outputs.openAIPTUEndpoint
 var dynamicOpenAIPAYGUrl = openaiModule.outputs.openAIPAYGEndpoint
 
@@ -100,15 +108,6 @@ module redisModule 'utils/redis.bicep' = {
     location: location
     env: env
     redisName: '${prefix}-redis'
-  }
-}
-
-// Deploy Azure OpenAI services (PTU & PAYG)
-module openaiModule 'utils/openai.bicep' = {
-  name: '${prefix}-openai-deploy'
-  params: {
-    location: location
-    prefix: prefix
   }
 }
 
